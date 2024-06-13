@@ -1,37 +1,44 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect } from "react";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { SplashScreen, Stack } from "expo-router";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import { useFonts } from "expo-font";
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+const _layout = () => {
+  const [fontsLoaded, error] = useFonts({
+    "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
+    EncodeSansBold: require("../assets/fonts/Poppins-Bold.ttf"),
+    "Poppins-ExtraBold": require("../assets/fonts/Poppins-ExtraBold.ttf"),
+    "Poppins-ExtraLight": require("../assets/fonts/Poppins-ExtraLight.ttf"),
+    EncodeSansLight: require("../assets/fonts/Poppins-Light.ttf"),
+    EncodeSansMedium: require("../assets/fonts/Poppins-Medium.ttf"),
+    EncodeSansRegular: require("../assets/fonts/Poppins-Regular.ttf"),
+    EncodeSansSemiBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
+    "Poppins-Thin": require("../assets/fonts/Poppins-Thin.ttf"),
   });
 
   useEffect(() => {
-    if (loaded) {
+    if (error) throw error;
+
+    if (fontsLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [fontsLoaded, error]);
 
-  if (!loaded) {
+  if (!fontsLoaded && !error) {
     return null;
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
+    <>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
       </Stack>
-    </ThemeProvider>
+    </>
   );
-}
+};
+
+export default _layout;
+
+const styles = StyleSheet.create({});
